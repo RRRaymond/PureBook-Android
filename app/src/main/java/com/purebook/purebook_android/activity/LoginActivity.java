@@ -8,6 +8,9 @@ import com.purebook.purebook_android.view.LoginView;
 import com.purebook.purebook_android.presenter.LoginPresenter;
 
 import butterknife.*;
+import easymvp.annotation.ActivityView;
+import easymvp.annotation.Presenter;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -19,29 +22,34 @@ import android.widget.Toast;
  * 登录activity
  */
 
-
+@ActivityView(layout = R.layout.activity_login,presenter = LoginPresenter.class)
 public class LoginActivity extends AppCompatActivity implements LoginView{
+
+    @Presenter
+    LoginPresenter mPresenter;
+
     @BindView(R.id.activity_login_logo) ImageView logo;
     @BindView(R.id.activity_login_user_name_text) EditText userNameEditText;
     @BindView(R.id.activity_login_user_password_text) EditText userPasswordEditText;
     @BindView(R.id.activity_login_login_button) Button loginButton;
     @BindView(R.id.activity_login_register_button) Button registerButton;
 
-    private LoginPresenter loginPresenter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        loginPresenter = new LoginPresenter(this);
-        initViews();
 
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+    }
+
+    @Override
     public void onDestroy(){
-        this.loginPresenter.onDestroy();
         super.onDestroy();
     }
 
@@ -56,7 +64,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
                     return;
                 }
 
-                loginPresenter.login(userName,userPassword);
+                mPresenter.login(userName,userPassword);
 
             }
         });
