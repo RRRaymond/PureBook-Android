@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.purebook.purebook_android.R;
 import com.purebook.purebook_android.presenter.LoginPresenter;
+import com.purebook.purebook_android.view.RegisterView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,7 +17,7 @@ import butterknife.ButterKnife;
  * Created by chrischen on 2017/12/26.
  */
 
-public class RegisterActivity extends AppCompatActivity{
+public class RegisterActivity extends AppCompatActivity implements RegisterView{
     @BindView(R.id.activity_register_logo) ImageView logo;
     @BindView(R.id.activity_register_user_name_text) EditText userNameEditText;
     @BindView(R.id.activity_register_user_password_text) EditText userPasswordEditText;

@@ -8,6 +8,6 @@ import com.purebook.purebook_android.base.BaseView;
 import com.purebook.purebook_android.bean.BookColumn;
 import java.util.List;
 
-public interface MainView extends BaseView{
+public interface MainView{
 
 }

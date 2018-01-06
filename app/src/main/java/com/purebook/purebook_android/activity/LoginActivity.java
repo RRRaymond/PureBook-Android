@@ -16,10 +16,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 /**
- * Created by chrischen on 2017/12/26.
+ * 登录activity
  */
 
-public class LoginActivity extends BaseActivity{
+
+public class LoginActivity extends AppCompatActivity implements LoginView{
     @BindView(R.id.activity_login_logo) ImageView logo;
     @BindView(R.id.activity_login_user_name_text) EditText userNameEditText;
     @BindView(R.id.activity_login_user_password_text) EditText userPasswordEditText;

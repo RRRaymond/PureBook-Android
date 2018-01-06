@@ -16,7 +16,7 @@ import com.purebook.purebook_android.R;
 
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseMvpActivity<MainView,MainPresenter> implements MainView{
+public class MainActivity extends AppCompatActivity implements MainView{
 
     private TextView mTextMessage;
 
