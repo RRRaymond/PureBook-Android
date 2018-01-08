@@ -4,34 +4,26 @@ package com.purebook.purebook_android.base;
  * Created by chrischen on 2018/1/2.
  */
 
-public interface BaseView {
+public interface BaseView<T> {
     /**
-     * @Description 进行耗时操作显示进度条
-     * @param isShow
+     * 打开加载框
      */
-    void showProgress(boolean isShow);
-
-    /**
-     * @Description 显示网络请求错误的接口
-     * @param errorCode
-     * @param errorDesc
-     * @param errorUrl
-     */
-    void showOkHttpError(int errorCode,String errorDesc,String errorUrl);
+    void  startLoadView();
 
     /**
-     * @Description 服务器端请求错误的接口
-     * @param errorCode
-     * @param errorDesc
+     * 关闭加载框
      */
-    void showServerError(int errorCode,String errorDesc);
+    void stopLoadView();
 
     /**
-     * @Description 请求成功后对应ui做出改变的接口
-     * @param isSuccess
+     * 网络请求成功后回调
+     * @param data
      */
-    void showSuccess(boolean isSuccess);
+    void onSuccess(T data);
 
-
-    void showToast(String msg);
+    /**
+     * 网络请求失败后回调
+     * @param msg
+     */
+    void onFail(String msg);
 }

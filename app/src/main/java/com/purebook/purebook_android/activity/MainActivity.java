@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.purebook.purebook_android.base.BaseMvpActivity;
 import com.purebook.purebook_android.base.BasePresenter;
 import com.purebook.purebook_android.presenter.MainPresenter;
 import com.purebook.purebook_android.view.MainView;
@@ -52,15 +51,10 @@ public class MainActivity extends AppCompatActivity implements MainView{
         ButterKnife.bind(this);
     }
 
-    @Override
-    public MainPresenter createPresenter(){
-        return new MainPresenter();
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        presenter.onResume();
     }
 
 

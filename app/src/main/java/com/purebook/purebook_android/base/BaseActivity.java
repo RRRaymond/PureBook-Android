@@ -1,5 +1,6 @@
 package com.purebook.purebook_android.base;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.icu.text.DateFormat;
@@ -22,72 +23,35 @@ import butterknife.ButterKnife;
  */
 
 
-public abstract class BaseActivity extends RxAppCompatActivity implements BaseView {
+public abstract class BaseActivity<V extends BaseView<P>,P extends BasePresenter<V>> extends Activity {
 
-    private static final String TAG = "BaseActivity";
-
-    protected BaseActivity mActivity;
+    public P mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);//设置无ActionBar，单在继承AppCompatActivity时无效，继承Activity时才有效
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//保持竖屏
-
-        this.mActivity=this;
-        initLayout();//初始化布局
         ButterKnife.bind(this);
-        initView();//初始化View
-    }
 
+        this.mPresenter = getPresenter();
 
-    /**
-     * 初始化布局
-     */
-    protected abstract void initLayout() ;
-
-    /**
-     * 初始化View
-     */
-    protected abstract void initView() ;
-
-
-
-
-    /**
-     * 设置进入
-     * @param intent
-     */
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-    }
-
-    protected void openActivty(Class<?> mclass){
-        Intent intent=new Intent(this,mclass);
-        startActivity(intent);
-    }
-
-    /**
-     * 设置退出
-     */
-    @Override
-    public void finish() {
-        super.finish();
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onResume(){
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onDestroy(){
         super.onDestroy();
+
+
     }
 
-    @Override
-    public void onBackPressed() {
-        this.finish();
-    }
+    public abstract P getPresenter();
 
-    @Override
-    public void showToast(String msg) {
-        Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_SHORT).show();
-    }
+
 }

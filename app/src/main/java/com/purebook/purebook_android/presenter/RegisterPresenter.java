@@ -1,6 +1,5 @@
 package com.purebook.purebook_android.presenter;
 
-import com.purebook.purebook_android.view.LoginView;
 import com.purebook.purebook_android.view.RegisterView;
 
 import easymvp.AbstractPresenter;

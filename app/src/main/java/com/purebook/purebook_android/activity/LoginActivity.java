@@ -1,15 +1,11 @@
 package com.purebook.purebook_android.activity;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import com.purebook.purebook_android.R;
-import com.purebook.purebook_android.base.BaseActivity;
-import com.purebook.purebook_android.base.BaseMvpActivity;
-import com.purebook.purebook_android.view.LoginView;
+import com.purebook.purebook_android.base.BaseBean;
+import com.purebook.purebook_android.base.BaseView;
 import com.purebook.purebook_android.presenter.LoginPresenter;
 
 import butterknife.*;
-import easymvp.annotation.ActivityView;
-import easymvp.annotation.Presenter;
 
 import android.os.Bundle;
 import android.view.View;
@@ -22,10 +18,8 @@ import android.widget.Toast;
  * 登录activity
  */
 
-@ActivityView(layout = R.layout.activity_login,presenter = LoginPresenter.class)
-public class LoginActivity extends AppCompatActivity implements LoginView{
+public class LoginActivity extends AppCompatActivity implements BaseView<BaseBean> {
 
-    @Presenter
     LoginPresenter mPresenter;
 
     @BindView(R.id.activity_login_logo) ImageView logo;
@@ -37,10 +31,12 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
+        initViews();
+        this.mPresenter = new LoginPresenter(this,this);
     }
 
     @Override
@@ -57,25 +53,32 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
         loginButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 String userName = userNameEditText.getText().toString();
-                String userPassword =  userPasswordEditText.getText().toString();
-
-                if(userName.isEmpty()||userPassword.isEmpty()){
-                    Toast.makeText(getApplicationContext(), "账号或密码不能为空", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                mPresenter.login(userName,userPassword);
+                String password =  userPasswordEditText.getText().toString();
+                mPresenter.login(userName,password);
 
             }
         });
     }
 
-    public void navigateToHome(){
-        startActivity(new Intent(this,MainActivity.class));
-        Toast.makeText(this,"成功登录",Toast.LENGTH_SHORT).show();
-        this.finish();
+    @Override
+    public void startLoadView() {
+        //loadView.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void stopLoadView() {
+        //loadView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onSuccess(BaseBean data){
+        Toast.makeText(this, data.message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFail(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
 
 
 }
