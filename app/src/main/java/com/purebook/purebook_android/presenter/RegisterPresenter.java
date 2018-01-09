@@ -21,8 +21,8 @@ public class RegisterPresenter extends BasePresenter<BaseBean> {
         model = new RegisterModel(this,context);
     }
 
-    public void login(String userName, String password) {
-        model.register(userName,password);
+    public void register(String userName, String password,String confirmPassword) {
+        model.register(userName,password,confirmPassword);
     }
 
 

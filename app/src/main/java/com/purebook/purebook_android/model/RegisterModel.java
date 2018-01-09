@@ -22,17 +22,18 @@ public class RegisterModel extends BaseModel {
        this.callBack = callBack;
    }
 
-   public void register(String userName,String password){
+   public void register(String userName,String password,String confirmPassword){
        callBack.requestBefore();
 
-       if(userName.isEmpty()||password.isEmpty()){
+       if(userName.isEmpty()||password.isEmpty()||confirmPassword.isEmpty()){
            callBack.requestFail("用户名或密码不能为空");
+       }else if(password!=confirmPassword){
+           callBack.requestFail("两次输入密码不一致");
        }else{
            BaseBean baseBean = new BaseBean();
            baseBean.status = "1";
-           baseBean.message = "登录成功！";
+           baseBean.message = "注册成功！";
            callBack.requestSuccess(baseBean);
        }
-
    }
 }

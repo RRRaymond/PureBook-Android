@@ -4,13 +4,12 @@ import com.purebook.purebook_android.base.BaseBean;
 import com.purebook.purebook_android.base.BasePresenter;
 import com.purebook.purebook_android.view.MainView;
 
-import easymvp.AbstractPresenter;
 
 /**
  * Created by chrischen on 2017/12/26.
  */
 
-public class MainPresenter extends BasePresenter<BaseBean> {
+public class MainPresenter {
 
 
 }

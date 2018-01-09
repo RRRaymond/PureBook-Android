@@ -1,4 +1,5 @@
 package com.purebook.purebook_android.activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import com.purebook.purebook_android.R;
 import com.purebook.purebook_android.base.BaseBean;
@@ -58,6 +59,11 @@ public class LoginActivity extends AppCompatActivity implements BaseView<BaseBea
 
             }
         });
+        registerButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                toRegister();
+            }
+        });
     }
 
     @Override
@@ -73,11 +79,32 @@ public class LoginActivity extends AppCompatActivity implements BaseView<BaseBea
     @Override
     public void onSuccess(BaseBean data){
         Toast.makeText(this, data.message, Toast.LENGTH_SHORT).show();
+        toHome();//跳转首页
     }
 
     @Override
     public void onFail(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 跳转到首页
+     */
+    public void toHome(){
+        Intent intent = new Intent(this,MainActivity.class);
+        //TODO:从json文件创建user对象并传值给main activity
+        Bundle bundle = new Bundle();
+        //bundle.putSerializable();
+
+        startActivity(intent);
+    }
+
+    /**
+     * 跳转到注册
+     */
+    public void toRegister(){
+        Intent intent = new Intent(this,RegisterActivity.class);
+        startActivity(intent);
     }
 
 

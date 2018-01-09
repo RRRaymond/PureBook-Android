@@ -1,4 +1,5 @@
 package com.purebook.purebook_android.activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import com.purebook.purebook_android.R;
 import com.purebook.purebook_android.base.BaseBean;
@@ -32,7 +33,6 @@ public class RegisterActivity extends AppCompatActivity implements BaseView<Base
     @BindView(R.id.activity_register_register_button) Button registerButton;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -55,10 +55,7 @@ public class RegisterActivity extends AppCompatActivity implements BaseView<Base
     private void initViews(){
         loginButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                String userName = userNameEditText.getText().toString();
-                String password =  userPasswordEditText.getText().toString();
-                mPresenter.login(userName,password);
-
+                toLogin();
             }
         });
 
@@ -66,7 +63,8 @@ public class RegisterActivity extends AppCompatActivity implements BaseView<Base
             public void onClick(View v){
                 String userName = userNameEditText.getText().toString();
                 String password =  userPasswordEditText.getText().toString();
-                mPresenter.login(userName,password);
+                String confirmPassword = userConfirmPasswordEditText.getText().toString();
+                mPresenter.register(userName,password,confirmPassword);
 
             }
         });
@@ -82,15 +80,35 @@ public class RegisterActivity extends AppCompatActivity implements BaseView<Base
         //loadView.setVisibility(View.GONE);
     }
 
+    /**
+     * 注册成功，跳转首页
+     * @param data
+     */
     @Override
     public void onSuccess(BaseBean data){
         Toast.makeText(this, data.message, Toast.LENGTH_SHORT).show();
+        //TODO
+        toMain();
     }
 
+    /**
+     * 注册失败
+     * @param msg
+     */
     @Override
     public void onFail(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
+    public void toLogin(){
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivity(intent);
+    }
+
+    public void toMain(){
+        //TODO
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivity(intent);
+    }
 
 }
