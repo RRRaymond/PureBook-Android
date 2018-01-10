@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.purebook.purebook_android.R;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.lang.reflect.Field;

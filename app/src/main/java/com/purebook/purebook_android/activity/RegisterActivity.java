@@ -103,12 +103,14 @@ public class RegisterActivity extends AppCompatActivity implements BaseView<Base
     public void toLogin(){
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
     public void toMain(){
         //TODO
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
 }

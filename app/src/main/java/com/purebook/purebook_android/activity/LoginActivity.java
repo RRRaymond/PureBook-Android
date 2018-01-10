@@ -1,6 +1,7 @@
 package com.purebook.purebook_android.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+
 import com.purebook.purebook_android.R;
 import com.purebook.purebook_android.base.BaseBean;
 import com.purebook.purebook_android.base.BaseView;
@@ -36,8 +37,8 @@ public class LoginActivity extends AppCompatActivity implements BaseView<BaseBea
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        initViews();
         this.mPresenter = new LoginPresenter(this,this);
+        initViews();
     }
 
     @Override
@@ -97,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements BaseView<BaseBea
         //bundle.putSerializable();
 
         startActivity(intent);
+        this.finish();
     }
 
     /**
@@ -105,6 +107,7 @@ public class LoginActivity extends AppCompatActivity implements BaseView<BaseBea
     public void toRegister(){
         Intent intent = new Intent(this,RegisterActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
 
