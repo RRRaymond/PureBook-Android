@@ -33,6 +33,5 @@
     </android.support.v4.widget.DrawerLayout>
 
     <include layout="@layout/view_error" />
-
     <include layout="@layout/view_loading" />
 </FrameLayout>
