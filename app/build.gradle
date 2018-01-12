@@ -20,6 +20,11 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
@@ -78,6 +83,6 @@ dependencies {
     compile ('com.github.ozodrukh:CircularReveal:1.1.1@aar') {
         transitive = true;
     }
-
+    compile 'org.greenrobot:eventbus:3.0.0'
 
 }
