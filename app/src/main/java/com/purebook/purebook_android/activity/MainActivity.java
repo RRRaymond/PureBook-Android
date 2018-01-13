@@ -145,7 +145,8 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
 
     private Fragment getNewFragment(int position, BookColumn item) {
         if (fragments[position] == null) {
-            fragments[position] = ColumnFragment.newInstance(item);
+            //TODO
+            //fragments[position] = ColumnFragment.newInstance(item);
         }
         return fragments[position];
     }
