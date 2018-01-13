@@ -1,6 +1,7 @@
 package com.purebook.purebook_android.activity;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,13 +27,17 @@ import android.support.v7.widget.Toolbar;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.purebook.purebook_android.base.BaseBean;
+import com.purebook.purebook_android.base.BaseMvpLceViewStateActivity;
 import com.purebook.purebook_android.base.BasePresenter;
 import com.purebook.purebook_android.base.BaseView;
 import com.purebook.purebook_android.bean.Book;
 import com.purebook.purebook_android.bean.BookColumn;
+import com.purebook.purebook_android.bean.User;
+import com.purebook.purebook_android.constants.Constants;
 import com.purebook.purebook_android.fragment.ColumnFragment;
 import com.purebook.purebook_android.presenter.MainPresenter;
 import com.purebook.purebook_android.utils.SkinUtils;
+import com.purebook.purebook_android.utils.StatusBarCompat;
 import com.purebook.purebook_android.view.CustomSearchView;
 import com.purebook.purebook_android.view.MainView;
 
@@ -40,6 +45,7 @@ import com.purebook.purebook_android.R;
 import com.zhy.changeskin.SkinManager;
 
 import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 import org.w3c.dom.Text;
 
 import java.util.List;
@@ -51,7 +57,7 @@ import butterknife.ButterKnife;
  * MainActivity
  * @author chrischen
  */
-public class MainActivity extends AppCompatActivity implements BaseView<BaseBean>,NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseMvpLceViewStateActivity<View,List<BookColumn>,MainView,MainPresenter> implements NavigationView.OnNavigationItemSelectedListener,MainView {
 
 
     @BindView(R.id.toolbar)Toolbar toolbar;
@@ -75,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
     private Fragment[] fragments;
     private Fragment mSelectedFragment;
 
+    private User currentUser;//当前用户
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
      * 初始化view
      */
     public void initViews(){
+
         setSupportActionBar(this.toolbar);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -106,6 +115,15 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
+            }
+        });
+
+        searchView.setVoiceViewClickListener(new CustomSearchView.VoiceViewClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO:
+                //CommonScanActivity_.intent(MainActivity.this).start();
+                searchView.closeSearch();
             }
         });
 
@@ -150,6 +168,37 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
         return fragments[position];
     }
 
+
+    @Subscriber(tag = Constants.EVENT_THEME_CHANGE)
+    public void applyTheme(Object o) {
+        setStatusBarColor();
+        setFabColor();
+        setMenuColor();
+    }
+
+    private void setStatusBarColor() {
+        int c = SkinManager.getInstance().getResourceManager().getColor(Constants.RES_COLOR_STATUSBAR);
+        StatusBarCompat.setStatusBarColorByDrawerLayout(this, drawer, c);
+    }
+
+    private void setFabColor() {
+        int c = SkinManager.getInstance().getResourceManager().getColor("fab_background");
+        int c2 = SkinManager.getInstance().getResourceManager().getColor("fab_press");
+        fab.setColorNormal(c);
+        fab.setColorRipple(c2);
+        fab.setColorPressed(c);
+    }
+
+    private void setMenuColor() {
+        int[] states_check = new int[]{android.R.attr.state_checked};
+        int[] states_normal = new int[]{};
+        int c = SkinManager.getInstance().getResourceManager().getColor(Constants.RES_COLOR_TEXT_HIGHT);//文字颜色
+        int checkColor = getResources().getColor(R.color.colorAccent);//文字选中颜色
+        ColorStateList colorList = new ColorStateList
+                (new int[][]{states_check, states_normal}, new int[]{checkColor, c});
+        navigationView.setItemTextColor(colorList);
+    }
+
     /**
      * 登录传Intent获取User信息
      */
@@ -163,8 +212,12 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
      */
     private void initNavigationMenu(){
         //TODO:
+        //currentUser = User.getCurrentUser(User.class);
         Menu menu =navigationView.getMenu();
-
+        int random = (int) (Math.random() * 9 + 1);
+        int idbase = random << 10;
+        int i = 0;
+        fragments = new Fragment[bookColumns.size()];
         mLogout = navigationView.findViewById(R.id.nav_logout);
         userNameText = navigationView.findViewById(R.id.nav_nickname);
         userAvatarImage = navigationView.findViewById(R.id.nav_icon);
@@ -174,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
         //.backgroundColor(SkinUtils.getWindowColor()).contentColor(SkinUtils.getTextHeightColor()).titleColor(SkinUtils.getTextHeightColor()) .onPositive((dialog, which) -> logout()).show());
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int groupId = item.getGroupId();
@@ -259,26 +313,6 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
     public void onDestroy(){
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void startLoadView() {
-        //loadView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void stopLoadView() {
-        //loadView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onSuccess(BaseBean data){
-
-    }
-
-    @Override
-    public void onFail(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
 
