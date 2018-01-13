@@ -10,6 +10,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,6 +28,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.purebook.purebook_android.base.BaseBean;
 import com.purebook.purebook_android.base.BasePresenter;
 import com.purebook.purebook_android.base.BaseView;
+import com.purebook.purebook_android.bean.Book;
+import com.purebook.purebook_android.bean.BookColumn;
+import com.purebook.purebook_android.fragment.ColumnFragment;
 import com.purebook.purebook_android.presenter.MainPresenter;
 import com.purebook.purebook_android.utils.SkinUtils;
 import com.purebook.purebook_android.view.CustomSearchView;
@@ -38,6 +42,8 @@ import com.zhy.changeskin.SkinManager;
 import org.simple.eventbus.EventBus;
 import org.w3c.dom.Text;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -46,6 +52,7 @@ import butterknife.ButterKnife;
  * @author chrischen
  */
 public class MainActivity extends AppCompatActivity implements BaseView<BaseBean>,NavigationView.OnNavigationItemSelectedListener {
+
 
     @BindView(R.id.toolbar)Toolbar toolbar;
     @BindView(R.id.contentView)DrawerLayout drawer;//整个layout
@@ -57,19 +64,23 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
     @Nullable
     @BindView(R.id.nav_head_layout)View navLayout;
 
-
+    private static final String FRAGGMENT_TAG = "FRAGGMENT_TAG";
     private ActionBarDrawerToggle toggle;
     private int mSelectPostion = -1;
     private Snackbar backPressSnackbar;
     private View mLogout;
     private TextView userNameText;
     private ImageView userAvatarImage;
+    private List<BookColumn> bookColumns;
+    private Fragment[] fragments;
+    private Fragment mSelectedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);//butterknife绑定控件
+        EventBus.getDefault().register(this);
         initViews();
     }
 
@@ -77,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
      * 初始化view
      */
     public void initViews(){
-        EventBus.getDefault().register(this);
         setSupportActionBar(this.toolbar);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -89,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //TODO:
+
                 return false;
             }
 
@@ -99,6 +110,44 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
         });
 
         initNavigationMenu();
+    }
+
+    /**
+     * 根据选择的tab替换fragment
+     * @param position
+     */
+    private void replaceFragment(int position){
+        if(position!=mSelectPostion){
+            searchView.closeSearch();
+            mSelectPostion = position;
+            BookColumn item = bookColumns.get(position);
+            toolbar.setTitle(item.getName());
+            //TODO:
+            FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+            hideAllFragment(trans);
+            if(fragments[position]!=null){
+                trans.show(fragments[position]);
+            }else{
+                trans.add(R.id.activity_main_fragmelayout,getNewFragment(position,item),FRAGGMENT_TAG+position);
+            }
+            trans.commit();
+            mSelectedFragment = fragments[position];
+        }
+    }
+
+    private void hideAllFragment(FragmentTransaction trans){
+        for(Fragment f:fragments){
+            if(f!=null){
+                trans.hide(f);
+            }
+        }
+    }
+
+    private Fragment getNewFragment(int position, BookColumn item) {
+        if (fragments[position] == null) {
+            fragments[position] = ColumnFragment.newInstance(item);
+        }
+        return fragments[position];
     }
 
     /**
@@ -120,9 +169,9 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
         userNameText = navigationView.findViewById(R.id.nav_nickname);
         userAvatarImage = navigationView.findViewById(R.id.nav_icon);
 
-        mLogout.setVisibility(View.VISIBLE);
-        mLogout.setOnClickListener(v -> new MaterialDialog.Builder(this).title("提示").content("确定要退出登陆吗？").positiveText("确认").negativeText("取消")
-        .backgroundColor(SkinUtils.getWindowColor()).contentColor(SkinUtils.getTextHeightColor()).titleColor(SkinUtils.getTextHeightColor()) .onPositive((dialog, which) -> logout()).show());
+        //mLogout.setVisibility(View.VISIBLE);
+        //mLogout.setOnClickListener(v -> new MaterialDialog.Builder(this).title("提示").content("确定要退出登陆吗？").positiveText("确认").negativeText("取消")
+        //.backgroundColor(SkinUtils.getWindowColor()).contentColor(SkinUtils.getTextHeightColor()).titleColor(SkinUtils.getTextHeightColor()) .onPositive((dialog, which) -> logout()).show());
     }
 
     @Override
@@ -200,23 +249,6 @@ public class MainActivity extends AppCompatActivity implements BaseView<BaseBean
     }
 
 
-    private void replaceFragment(int position) {
-        if (position != mSelectPostion) {
-            searchView.closeSearch();//选择其他menu，关闭搜索框
-            mSelectPostion = position;
-            //BookColumn item = bookColumns.get(position);
-            //toolbar.setTitle(item.getName());
-            //FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
-            //hideAllFragment(trans);
-            //if (fragments[position] != null) {
-            //    trans.show(fragments[position]);
-            //} else {
-            //    trans.add(R.id.activity_main_fragmelayout, getNewFragment(position, item), FRAGGMENT_TAG + position);
-            //}
-            //trans.commit();
-            //mSelectFragment = fragments[position];
-        }
-    }
 
     @Override
     public void onStart(){

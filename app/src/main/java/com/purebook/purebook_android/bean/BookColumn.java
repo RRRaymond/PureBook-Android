@@ -5,4 +5,10 @@ package com.purebook.purebook_android.bean;
  */
 
 public class BookColumn {
+    public String columnName;
+    public String columnType;
+
+    public String getName(){
+        return this.columnName;
+    }
 }
